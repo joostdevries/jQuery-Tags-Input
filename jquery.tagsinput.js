@@ -84,7 +84,20 @@
 				}
 
 				value = jQuery.trim(value);
-		
+
+        if($(this).tagExist(value) && (tags_callbacks[id] && tags_callbacks[id]['onDuplicateTag'])) {
+          var i = tagslist.length;
+          var f = tags_callbacks[id]['onDuplicateTag'];
+          f.call(this, value);
+
+          $('#'+id+'_tag').val('');
+          if (options.focus) {
+            $('#'+id+'_tag').focus();
+          } else {    
+            $('#'+id+'_tag').blur();
+          }
+        }	
+
 				if (options.unique) {
 					var skipTag = $(this).tagExist(value);
 					if(skipTag == true) {
@@ -216,6 +229,7 @@
 				tags_callbacks[id]['onAddTag'] = settings.onAddTag;
 				tags_callbacks[id]['onRemoveTag'] = settings.onRemoveTag;
 				tags_callbacks[id]['onChange'] = settings.onChange;
+				tags_callbacks[id]['onDuplicateTag'] = settings.onDuplicateTag;
 			}
 	
 			var markup = '<div id="'+id+'_tagsinput" class="tagsinput"><div id="'+id+'_addTag">';
