@@ -84,25 +84,28 @@
         }
 
         value = jQuery.trim(value);
-
-        if($(this).tagExist(value) && (tags_callbacks[id] && tags_callbacks[id]['onDuplicateTag'])) {
-          var i = tagslist.length;
-          var f = tags_callbacks[id]['onDuplicateTag'];
-          f.call(this, value);
-
-          $('#'+id+'_tag').val('');
-          if (options.focus) {
-            $('#'+id+'_tag').focus();
-          } else {    
-            $('#'+id+'_tag').blur();
-          }
-        } 
-
+    
         if (options.unique) {
           var skipTag = $(this).tagExist(value);
           if(skipTag == true) {
+              if(tags_callbacks[id] && tags_callbacks[id]['onDuplicateTag'])
+              {
+                console.log(value);
+                var i = tagslist.length;
+                var f = tags_callbacks[id]['onDuplicateTag'];
+                f.call(this, value);
+
+                $('#'+id+'_tag').val('');
+                if (options.focus) {
+                  $('#'+id+'_tag').focus();
+                } else {    
+                  $('#'+id+'_tag').blur();
+                }
+              }
+              else {
               //Marks fake input as not_valid to let styling it
                 $('#'+id+'_tag').addClass('not_valid');
+              }
             }
         } else {
           var skipTag = false; 
@@ -228,8 +231,8 @@
         tags_callbacks[id] = new Array();
         tags_callbacks[id]['onAddTag'] = settings.onAddTag;
         tags_callbacks[id]['onRemoveTag'] = settings.onRemoveTag;
-        tags_callbacks[id]['onChange'] = settings.onChange;
         tags_callbacks[id]['onDuplicateTag'] = settings.onDuplicateTag;
+        tags_callbacks[id]['onChange'] = settings.onChange;
       }
   
       var markup = '<div id="'+id+'_tagsinput" class="tagsinput"><div id="'+id+'_addTag">';
